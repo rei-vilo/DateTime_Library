@@ -10,7 +10,7 @@
 /// @author		http://embeddedcomputing.weebly.com
 ///
 /// @date		Jul 31, 2015
-/// @version	102
+/// @version	103
 /// 
 /// @copyright	(c) Rei Vilo, 2015
 /// @copyright	CC = BY SA NC
@@ -98,27 +98,40 @@ public:
 
     ///
     /// @brief	Set GMT date and time
-    /// @param	epoch number of seconds since Jan 1st, 1970
+    /// @param	timeEpoch time as epoch, number of seconds since Jan 1st, 1970
     ///
-    void setTime(uint32_t epoch);
+    void setTime(uint32_t timeEpoch);
 
     ///
-    /// @brief	Set local date and time
-    /// @param	epoch number of seconds since Jan 1st, 1970
-    /// @note   Set the time zone with setTimeZone()
+    /// @brief	Set GMT date and time
+    /// @param	timeStructure time as structure
     ///
-    void setLocalTime(uint32_t epoch);
-
+    void setTime(tm timeStructure);
+    
     ///
     /// @brief	Set time zone
     /// @param	timeZone difference in seconds between local time zone and GMT
     /// @note   Use pre-defined tz_CET, tz_CEST, tz_PST, tz_PDT, ...
     ///
-    void setTimeZone(int32_t timeZone);
+    void setTimeZone(int32_t timeZone = tz_GMT);
+    
+    ///
+    /// @brief	Set local date and time
+    /// @param	timeEpoch time as epoch, number of seconds since Jan 1st, 1970
+    /// @note   Set the time zone with setTimeZone()
+    ///
+    void setLocalTime(uint32_t timeEpoch);
+
+    ///
+    /// @brief	Set local date and time
+    /// @param	timeStructure time as structure
+    /// @note   Set the time zone with setTimeZone()
+    ///
+    void setLocalTime(tm timeStructure);
 
 private:
-    time_t _epochRTC;
-    tm _structureRTC;
+    time_t  _epochRTC;
+    tm      _structureRTC;
     int32_t _timeZoneDifference;
     
 #if defined(__MSP432P401R__)
@@ -156,20 +169,39 @@ private:
 
 ///
 /// @brief	Convert epoch into structure
-/// @param	epoch time as epoch
-/// @param	timeStructure time as structure
+/// @param	timeEpoch time as epoch, input
+/// @param	timeStructure time as structure, output
 ///
-void convertEpoch2Structure(time_t epoch, tm &timeStructure);
+void convertEpoch2Structure(time_t timeEpoch, tm &timeStructure);
 
 ///
 /// @brief	Convert structure into epoch
-/// @param	timeStructure time as time structure
-/// @param	epoch time as epoch
+/// @param	timeStructure time as time structure, input
+/// @param	timeEpoch time as epoch, output
 ///
-void convertStructure2Epoch(tm timeStructure, time_t &epoch);
+void convertStructure2Epoch(tm timeStructure, time_t &timeEpoch);
 
 ///
-/// @brief	Standard format for date and time
+/// @brief	Convert a string into date and time, epoch format
+/// @param	stringDateTime date and time as string, input
+/// @param	stringFormat string format, input, see below
+/// @param	timeEpoch time as epoch, output
+/// @return	true if success, false if error
+///
+bool convertString2DateTime(String stringDateTime, String stringFormat, time_t &timeEpoch);
+
+///
+/// @brief	Convert a string into date and time, strcuture format
+/// @param	stringDateTime date and time as string, input
+/// @param	stringFormat string format, input, see below
+/// @param	timeStructure time as strcuture, output
+/// @return	true if success, false if error
+///
+bool convertString2DateTime(String stringDateTime, String stringFormat, tm &timeStructure);
+
+
+///
+/// @brief	Standard format for date and time string
 /// @param	timeStructure time as structure
 /// @return	String
 /// @note   Sun Jul 19 18:55:13 2015
@@ -177,12 +209,12 @@ void convertStructure2Epoch(tm timeStructure, time_t &epoch);
 String stringDateTime(tm timeStructure);
 
 ///
-/// @brief	Standard format for date and time
-/// @param	epoch time as epoch
+/// @brief	Standard format for date and time string
+/// @param	timeEpoch time as epoch
 /// @return	String
 /// @note   Sun Jul 19 18:55:13 2015
 ///
-String stringDateTime(time_t epoch);
+String stringDateTime(time_t timeEpoch);
 
 ///
 /// @brief	Custom format for date and time
@@ -190,17 +222,19 @@ String stringDateTime(time_t epoch);
 /// @param	timeStructure time as structure
 /// @return	String
 ///
-String formatStringDateTime(const char * format, tm timeStructure);
+String stringFormatDateTime(const char * format, tm timeStructure);
 
 ///
 /// @brief	Custom format for time
 /// @param	format see below
-/// @param	epoch time as epoch
+/// @param	timeEpoch time as epoch
 /// @return	String
 ///
-String formatStringDateTime(const char * format, time_t epoch);
+String stringFormatDateTime(const char * format, time_t timeEpoch);
 
-/// Format for formatStringDateTime()
+///
+/// @brief	Format for date and time string
+/// @note   Valid for stringFormatDateTime() and convertString2DateTime()
 ///
 /// Specifier | Replaced by | Example
 /// ---- | ---------------- | ----------------

@@ -189,7 +189,7 @@ void loop()
         Serial.print(stringDateTime(myEpochRTC));
         Serial.print("\r");
         
-        Serial.println(formatStringDateTime("CEST time is %I:%M %p.", myRTC.getLocalTime()));
+        Serial.println(stringFormatDateTime("CEST time is %I:%M %p.", myRTC.getLocalTime()));
     }
     
     for (int8_t i=10; i>0; i--)

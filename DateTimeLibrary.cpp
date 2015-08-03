@@ -42,19 +42,56 @@ String stringDateTime(time_t timeEpoch)
     return (String)ctime(&timeEpoch);
 }
 
-String formatStringDateTime(const char * format, tm timeStructure)
+String stringFormatDateTime(const char * format, tm timeStructure)
 {
     char buffer[128];
     strftime(buffer, 128, format, &timeStructure);
     return (String)buffer;
 }
 
-String formatStringDateTime(const char * format, time_t timeEpoch)
+String stringFormatDateTime(const char * format, time_t timeEpoch)
 {
-    tm timeStructure;
-    convertEpoch2Structure(timeEpoch, timeStructure);
-    return formatStringDateTime(format, timeStructure);
+    tm _timeStructure;
+    convertEpoch2Structure(timeEpoch, _timeStructure);
+    return stringFormatDateTime(format, _timeStructure);
 }
+
+bool convertString2DateTime(String stringDateTime, String stringFormat, time_t &timeEpoch)
+{
+    tm _timeStructure;
+    
+    if (convertString2DateTime(stringDateTime, stringFormat, _timeStructure))
+    {
+        convertStructure2Epoch(_timeStructure, timeEpoch);
+        return true;
+    }
+    else
+    {
+        // error
+        return false;
+    }
+}
+
+bool convertString2DateTime(String stringDateTime, String stringFormat, tm &timeStructure)
+{
+    tm _timeStructure;
+    char charDateTime[32];
+    char charFormat[32];
+    stringDateTime.toCharArray((char*)charDateTime, 32);
+    stringFormat.toCharArray((char*)charFormat, 32);
+    
+    if (strptime(charDateTime, charFormat, &_timeStructure) == NULL)
+    {
+        // error
+        return false;
+    }
+    else
+    {
+        timeStructure = _timeStructure;
+        return true;
+    }
+}
+
 
 // Class
 DateTime::DateTime()
@@ -72,9 +109,15 @@ uint32_t DateTime::getLocalTime()
     return getTime() + _timeZoneDifference;
 }
 
-void DateTime::setLocalTime(uint32_t epoch)
+void DateTime::setLocalTime(uint32_t timeEpoch)
 {
-    setTime(epoch + _timeZoneDifference);
+    setTime(timeEpoch - _timeZoneDifference);
+}
+
+void DateTime::setLocalTime(tm timeStructure)
+{
+    convertStructure2Epoch(timeStructure, _epochRTC);
+    setTime(_epochRTC - _timeZoneDifference);
 }
 
 // MSP432 RTC
@@ -85,7 +128,14 @@ void DateTime::begin()
     RTC_C_startClock();
 }
 
-void DateTime::setTime(uint32_t epoch)
+void DateTime::setTime(uint32_t timeEpoch)
+{
+    // Convert epoch into standard C structure
+    convertEpoch2Structure(timeEpoch, _structureRTC);
+    setTime(_structureRTC);
+}
+
+void DateTime::setTime(tm structureTime)
 {
     //  MSP432 specific structure   Standard C structure
     //  struct _RTC_C_Calendar      struct tm
@@ -103,21 +153,15 @@ void DateTime::setTime(uint32_t epoch)
     //                                  long tm_gmtoff;  // offset from CUT in seconds
     //                                  char *tm_zone;  // timezone abbreviation
     //  };                          };
-    
-    // gmtime requires int32_t instead of uint32_t with MSP432
-    //    int32_t _i32 = epoch;
-    // Convert epoch into standard C structure
-    //    _structureRTC = *gmtime(&_i32);
-    convertEpoch2Structure(epoch, _structureRTC);
-    
+
     // Convert standard C structure into MSP432 specific structure
-    _calendarMSP432.seconds    = _structureRTC.tm_sec;
-    _calendarMSP432.minutes    = _structureRTC.tm_min;
-    _calendarMSP432.hours      = _structureRTC.tm_hour;
-    _calendarMSP432.dayOfWeek  = _structureRTC.tm_wday;
-    _calendarMSP432.dayOfmonth = _structureRTC.tm_mday;
-    _calendarMSP432.month      = _structureRTC.tm_mon + 1; // tm_mon is 0..11
-    _calendarMSP432.year       = _structureRTC.tm_year + 1900;
+    _calendarMSP432.seconds    = structureTime.tm_sec;
+    _calendarMSP432.minutes    = structureTime.tm_min;
+    _calendarMSP432.hours      = structureTime.tm_hour;
+    _calendarMSP432.dayOfWeek  = structureTime.tm_wday;
+    _calendarMSP432.dayOfmonth = structureTime.tm_mday;
+    _calendarMSP432.month      = structureTime.tm_mon + 1; // tm_mon is 0..11
+    _calendarMSP432.year       = structureTime.tm_year + 1900;
     
     RTC_C_holdClock();
     // RTC_FORMAT_BINARY not available, so I guess RTC_FORMAT_BINARY = 0
@@ -167,15 +211,21 @@ void DateTime::begin()
     //    PRCMRTCSet(0, 0);
 }
 
-void DateTime::setTime(uint32_t epoch)
+void DateTime::setTime(uint32_t timeEpoch)
 {
-    PRCMRTCSet(epoch, 0);
+    PRCMRTCSet(timeEpoch, 0);
+}
+
+void DateTime::setTime(tm timeStructure)
+{
+    convertStructure2Epoch(timeStructure, _epochRTC);
+    PRCMRTCSet(_epochRTC, 0);
 }
 
 uint32_t DateTime::getTime()
 {
     uint32_t _seconds = 0;
-    uint16_t _millis = 0;
+    uint16_t _millis  = 0;
     PRCMRTCGet(&_seconds, &_millis);
     return _seconds;
 }
@@ -188,9 +238,15 @@ void DateTime::begin()
     ROM_HibernateRTCEnable();
 }
 
-void DateTime::setTime(uint32_t epoch)
+void DateTime::setTime(uint32_t timeEpoch)
 {
-    ROM_HibernateRTCSet(epoch);
+    ROM_HibernateRTCSet(timeEpoch);
+}
+
+void DateTime::setTime(tm timeStructure)
+{
+    convertStructure2Epoch(timeStructure, _epochRTC);
+    PRCMRTCSet(_epochRTC, 0);
 }
 
 uint32_t DateTime::getTime()
