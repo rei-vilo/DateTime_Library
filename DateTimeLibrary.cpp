@@ -34,12 +34,18 @@ void convertStructure2Epoch(tm timeStructure, time_t &timeEpoch)
 
 String stringDateTime(tm timeStructure)
 {
-    return (String)asctime(&timeStructure);
+    // asctime ends with \n, remove it!
+    String result = (String)asctime(&timeStructure);
+    result.trim();
+    return result;
 }
 
 String stringDateTime(time_t timeEpoch)
 {
-    return (String)ctime(&timeEpoch);
+    // ctime ends with \n, remove it!
+    String result = (String)ctime(&timeEpoch);
+    result.trim();
+    return result;
 }
 
 String stringFormatDateTime(const char * format, tm timeStructure)
@@ -153,7 +159,7 @@ void DateTime::setTime(tm structureTime)
     //                                  long tm_gmtoff;  // offset from CUT in seconds
     //                                  char *tm_zone;  // timezone abbreviation
     //  };                          };
-
+    
     // Convert standard C structure into MSP432 specific structure
     _calendarMSP432.seconds    = structureTime.tm_sec;
     _calendarMSP432.minutes    = structureTime.tm_min;
@@ -246,7 +252,7 @@ void DateTime::setTime(uint32_t timeEpoch)
 void DateTime::setTime(tm timeStructure)
 {
     convertStructure2Epoch(timeStructure, _epochRTC);
-    PRCMRTCSet(_epochRTC, 0);
+    ROM_HibernateRTCSet(timeEpoch);
 }
 
 uint32_t DateTime::getTime()
@@ -260,15 +266,16 @@ uint32_t DateTime::getTime()
 
 #if (INCLUDE_NTP == 1)
 
-bool getTimeNTP(time_t &epochNTP, IPAddress serverNTP)
+uint8_t getTimeNTP(time_t &epochNTP, IPAddress serverNTP)
 {
-    bool result = false;
+    uint8_t result = GET_NTP_OTHER_ERROR;
     
     // Check WiFi connection
     if (WiFi.localIP() == INADDR_NONE)
     {
-        if (Serial) Serial.println("ERROR No WiFi");
-        return false;
+        //        if (Serial)
+        //            Serial.println("ERROR No WiFi");
+        return GET_NTP_NO_CONNECTION;
     }
     
     const uint16_t localPort = 2390;      // local port to listen for UDP packets
@@ -320,7 +327,11 @@ bool getTimeNTP(time_t &epochNTP, IPAddress serverNTP)
         // epoch = number of seconds since 00:00, Jan 1st, 1970 UTC = POSIX time.
         // see http://www.epochconverter.com
         epochNTP -= (uint32_t)2208988800;
-        result = true;
+        result = GET_NTP_SUCCESS;
+    }
+    else
+    {
+        result = GET_NTP_DATA_ERROR;
     }
     
     myUDPforNTP.stop();

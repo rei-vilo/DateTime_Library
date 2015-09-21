@@ -45,6 +45,16 @@
 ///
 #define INCLUDE_NTP 1
 
+#if (INCLUDE_NTP == 1)
+#include "WiFi.h"
+
+#define GET_NTP_SUCCESS 0
+#define GET_NTP_NO_CONNECTION 1
+#define GET_NTP_DATA_ERROR 2
+#define GET_NTP_OTHER_ERROR 9
+
+#endif
+
 ///
 /// @brief      Predefined time zones
 /// @details    Difference in seconds to GMT/CUT
@@ -282,13 +292,12 @@ String stringFormatDateTime(const char * format, time_t timeEpoch);
 
 
 #if (INCLUDE_NTP == 1)
-#include "WiFi.h"
 
 ///
 /// @brief      Get date and time from NTP server
 /// @param      epochNTP time in epoch format
 /// @param      serverNTP IP address of the NTP server, default =
-/// @return     true is successful, false otherwise
+/// @return     0 is successful, error code otherwise
 /// @note       epochNTP is updated only if successful.
 /// @warning    A valid connection to Internet is required.
 /// @note       Examples of NTP servers
@@ -305,7 +314,7 @@ String stringFormatDateTime(const char * format, time_t timeEpoch);
 /// @see 	NTP time servers and messages
 /// @n		http://en.wikipedia.org/wiki/Network_Time_Protocol
 ///
-bool getTimeNTP(time_t &epochNTP, IPAddress serverNTP = IPAddress(145,238,203,14));
+uint8_t getTimeNTP(time_t &epochNTP, IPAddress serverNTP = IPAddress(145,238,203,14));
 
 #endif // NTP
 #endif // header
