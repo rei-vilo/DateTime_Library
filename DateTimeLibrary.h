@@ -9,8 +9,8 @@
 /// @author		Rei Vilo
 /// @author		http://embeddedcomputing.weebly.com
 ///
-/// @date		Jul 31, 2015
-/// @version	103
+/// @date		Sep 23, 2015
+/// @version	104
 /// 
 /// @copyright	(c) Rei Vilo, 2015
 /// @copyright	CC = BY SA NC
@@ -23,8 +23,8 @@
 // Core library for code-sense - IDE-based
 #include "Energia.h"
 
-#ifndef DateTimeLibrary_h
-#define DateTimeLibrary_h
+#ifndef DATETIMELIBRARY_VERSION
+#define DATETIMELIBRARY_VERSION 104
 
 #include "time.h"
 
@@ -43,7 +43,7 @@
 /// @brief      Scope for NTP
 /// @details    1 to include NTP utility, 0 otherwise
 ///
-#define INCLUDE_NTP 1
+#define INCLUDE_NTP 0
 
 #if (INCLUDE_NTP == 1)
 #include "WiFi.h"

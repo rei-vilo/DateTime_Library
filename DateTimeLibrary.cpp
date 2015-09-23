@@ -252,7 +252,7 @@ void DateTime::setTime(uint32_t timeEpoch)
 void DateTime::setTime(tm timeStructure)
 {
     convertStructure2Epoch(timeStructure, _epochRTC);
-    ROM_HibernateRTCSet(timeEpoch);
+    ROM_HibernateRTCSet(_epochRTC);
 }
 
 uint32_t DateTime::getTime()
