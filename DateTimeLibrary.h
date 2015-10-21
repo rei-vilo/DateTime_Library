@@ -9,8 +9,8 @@
 /// @author		Rei Vilo
 /// @author		http://embeddedcomputing.weebly.com
 ///
-/// @date		Sep 23, 2015
-/// @version	104
+/// @date		Oct 21, 2015
+/// @version	105
 /// 
 /// @copyright	(c) Rei Vilo, 2015
 /// @copyright	CC = BY SA NC
@@ -32,7 +32,7 @@
 #	include "rtc_c.h"
 #elif defined(__CC3200R1M1RGC__)
 #   include <driverlib/prcm.h>
-#elif defined(__LM4F120H5QR__) || defined(__TM4C123GH6PM__) || defined(__TM4C129XNCZAD__) || defined(TM4C1294NCPDT)
+#elif defined(__LM4F120H5QR__) || defined(__TM4C123GH6PM__) || defined(__TM4C129XNCZAD__) || defined(__TM4C1294NCPDT__)
 // nothing, as TivaWare is already in ROM!
 #else
 #	error Platform not supported.
