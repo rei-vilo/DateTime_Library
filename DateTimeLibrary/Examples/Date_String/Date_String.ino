@@ -9,7 +9,7 @@
 /// @author		Rei Vilo
 /// @author		http://embeddedcomputing.weebly.com
 /// @date		19/07/2015 15:12
-/// @version	101
+/// @version	301
 ///
 /// @copyright	(c) Rei Vilo, 2015
 /// @copyright	CC = BY SA NC
@@ -28,7 +28,7 @@
 /// @author		Rei Vilo
 /// @author		http://embeddedcomputing.weebly.com
 /// @date		19/07/2015 15:12
-/// @version	101
+/// @version	301
 ///
 /// @copyright	(c) Rei Vilo, 2015
 /// @copyright	CC = BY SA NC
@@ -81,12 +81,10 @@
 #include "DateTimeLibrary.h"
 
 // Prototypes
-char * datestamp = __DATE__;
-char * timestamp = __TIME__;
 
 // Define variables and constants
 time_t myEpochRTC;
-tm myTimeRTC;
+tm myStructureRTC;
 
 DateTime myRTC;
 
@@ -100,16 +98,35 @@ void setup()
     myRTC.begin();
     myRTC.setTimeZone(tz_CEST);
 
-    Serial.print("*** datestamp = ");
-    Serial.println(datestamp);
-    Serial.print("*** timestamp = ");
-    Serial.println(timestamp);
+    // Date and time are local
+    //
+    // __DATE__ and __TIME__ are populated by Xcode during compilation
+    String stampDateTime = String(__DATE__ " " __TIME__);
+
+    // otherwise set
+    // String stampDateTime = "Aug  3 2015 15:34:16";
     
-    // Fri, 31 Jul 2015 20:41:48 GMT
-    myEpochRTC = 1438375308;
+    Serial.print("*** Date and time stamp = ");
+    Serial.println(stampDateTime);
     
-    // Set time to RTC, only once
-    myRTC.setTime(myEpochRTC);
+    
+    if (convertString2DateTime(stampDateTime, "%b %d %Y %H:%M:%S", myEpochRTC))
+    {
+        myRTC.setLocalTime(myEpochRTC);
+    }
+    else
+    {
+        Serial.println("Error: wrong format.");
+
+        // Fri, 31 Jul 2015 20:41:48 GMT
+        myEpochRTC = 1438375308;
+        Serial.print("Using default local time = ");
+        Serial.println(stringDateTime(myEpochRTC));
+        
+        // Set time to RTC, only once
+        myRTC.setLocalTime(myEpochRTC);
+}
+
     Serial.print("Set RTC = ");
     Serial.println(myEpochRTC, DEC);
     
@@ -123,7 +140,7 @@ void loop()
     Serial.print("Get RTC  = ");
     Serial.println(myEpochRTC);
     
-    convertEpoch2Structure(myEpochRTC, myTimeRTC);
+    convertEpoch2Structure(myEpochRTC, myStructureRTC);
 
     Serial.print("RTC = \t");
     Serial.print(stringDateTime(myEpochRTC));
@@ -135,7 +152,7 @@ void loop()
     Serial.print("Get CEST = ");
     Serial.println(myEpochRTC);
     
-    convertEpoch2Structure(myEpochRTC, myTimeRTC);
+    convertEpoch2Structure(myEpochRTC, myStructureRTC);
     
     Serial.print("CEST = \t");
     Serial.print(stringDateTime(myEpochRTC));
@@ -151,7 +168,7 @@ void loop()
     Serial.print("Get PDT = ");
     Serial.println(myEpochRTC);
     
-    convertEpoch2Structure(myEpochRTC, myTimeRTC);
+    convertEpoch2Structure(myEpochRTC, myStructureRTC);
     
     Serial.print("PDT = \t");
     Serial.print(stringDateTime(myEpochRTC));
@@ -159,7 +176,7 @@ void loop()
     
     // Even more flexible output!
     // see http://www.cplusplus.com/reference/ctime/strftime/
-    Serial.println(stringFormatDateTime("Now it's %I:%M %p.", myTimeRTC));
+    Serial.println(stringFormatDateTime("Now it's %I:%M %p.", myStructureRTC));
     
     Serial.println();
 

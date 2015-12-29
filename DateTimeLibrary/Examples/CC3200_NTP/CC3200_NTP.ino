@@ -9,7 +9,7 @@
 /// @author		Rei Vilo
 /// @author		http://embeddedcomputing.weebly.com
 /// @date		18/07/2015 16:22
-/// @version	101
+/// @version	301
 ///
 /// @copyright	(c) Rei Vilo, 2015
 /// @copyright	CC = BY SA NC
@@ -33,7 +33,7 @@
 /// @author		Rei Vilo
 /// @author		http://embeddedcomputing.weebly.com
 /// @date		18/07/2015 16:22
-/// @version	101
+/// @version	301
 ///
 /// @copyright	(c) Rei Vilo, 2015
 /// @copyright	CC = BY SA NC
@@ -88,6 +88,7 @@
 // No need for reinventing them!
 //#include "time.h"
 #include "DateTimeLibrary.h"
+#include "NTP_WiFi.h"
 #include "Credentials.h"            // for SSID and password
 
 // Define variables and constants

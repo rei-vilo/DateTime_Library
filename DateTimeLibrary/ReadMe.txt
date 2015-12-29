@@ -26,7 +26,6 @@ Based on UDP NTP Client, provided with Energia 16
 * Modified 9 Apr 2012 by Tom Igoe
 * Modified 1 July 2014 by Noah Luskey
 * Updated July 19, 2015 by Rei Vilo with RTC for CC3200, MSP432, TM4C123 and TM4C129
-* Updated Dec 22, 2015 by Rei Vilo as separate libraries for WiFi and Ethernet
 
 See 	NTP time servers and messages
 http://en.wikipedia.org/wiki/Network_Time_Protocol
@@ -36,7 +35,7 @@ http://en.wikipedia.org/wiki/Network_Time_Protocol
   embedXcode+
   ----------------------------------
   Embedded Computing on Xcode
-  Copyright © Rei VILO, 2010-2016
+  Copyright © Rei VILO, 2010-2015
   All rights reserved
   http://embedXcode.weebly.com
 
