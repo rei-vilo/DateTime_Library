@@ -1,10 +1,10 @@
 ///
-/// @file		DateTimeLibrary.h
+/// @file		RTC_Library.h
 /// @brief		Library header
 /// @details	RTC Date and Time Library for LM4F / TM4C, MSP432 and CC3200
 /// @note       Use NTP_Ethernet or NTP_WiFi for getting NTP time
 /// @n
-/// @n @b		Project DateTimeLibrary_v2
+/// @n @b		Project RTC_Library
 /// @n @a		Developed with [embedXcode+](http://embedXcode.weebly.com)
 ///
 /// @author		Rei Vilo
@@ -24,11 +24,11 @@
 // Core library for code-sense - IDE-based
 #include "Energia.h"
 
-#ifndef DATETIMELIBRARY_VERSION
+#ifndef RTC_Library_VERSION
 ///
 /// @brief	Release
 ///
-#define DATETIMELIBRARY_VERSION 301
+#define RTC_Library_VERSION 301
 
 
 #include "time.h"

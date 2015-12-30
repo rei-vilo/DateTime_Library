@@ -1,11 +1,11 @@
 //
-// DateTimeLibrary.cpp
+// RTC_Library.cpp
 // Library C++ code
 // ----------------------------------
 // Developed with embedXcode+
 // http://embedXcode.weebly.com
 //
-// Project 		DateTimeLibrary_v2
+// Project 		RTC_Library_v2
 //
 // Created by 	Rei Vilo, 19/07/2015 16:31
 // 				http://embeddedcomputing.weebly.com
@@ -13,12 +13,12 @@
 // Copyright 	(c) Rei Vilo, 2015
 // Licence		CC = BY NC SA
 //
-// See 			DateTimeLibrary.h and ReadMe.txt for references
+// See 			RTC_Library.h and ReadMe.txt for references
 //
 
 
 // Library header
-#include "DateTimeLibrary.h"
+#include "RTC_Library.h"
 
 // Utilities
 void convertEpoch2Structure(time_t timeEpoch, tm &timeStructure)
