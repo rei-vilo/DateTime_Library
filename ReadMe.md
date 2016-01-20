@@ -22,3 +22,7 @@ Ethernet NTP tested on
 * LaunchPad TM4C129 
 
 Feel free to add other LaunchPads !
+
+### Licence
+
+Creative Commons [Attribution-NonCommercial-ShareAlike 4.0 International License](http://creativecommons.org/licenses/by-nc-sa/4.0/)
