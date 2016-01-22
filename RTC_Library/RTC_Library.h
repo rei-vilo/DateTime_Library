@@ -63,7 +63,7 @@
 #define tz_PDT -7*60*60    ///< Pacific Daylight Time
 
 #define tz_CST -6*60*60    ///< Central Standard Time
-#define tz_PDT -5*60*60    ///< Central Daylight Time
+#define tz_CDT -5*60*60    ///< Central Daylight Time
 /// @}
 
 
@@ -80,58 +80,58 @@ public:
     /// @brief      Constructor
     ///
     DateTime();
-    
+
     ///
     /// @brief      Initialisation
     ///
     void begin();
-    
+
     ///
     /// @brief      Get GMT date and time
     /// @return     epoch = number of seconds since Jan 1st, 1970, uint32_t or time_t
     ///
     uint32_t getTime();
-    
+
     ///
     /// @brief      Get local date and time
     /// @return     epoch = number of seconds since Jan 1st, 1970, uint32_t or time_t
     /// @note       Set the time zone with setTimeZone()
     ///
     uint32_t getLocalTime();
-    
+
     ///
     /// @brief      Set GMT date and time
     /// @param      timeEpoch time as epoch, number of seconds since Jan 1st, 1970
     ///
     void setTime(uint32_t timeEpoch);
-    
+
     ///
     /// @brief      Set GMT date and time
     /// @param		timeStructure time as structure
     ///
     void setTime(tm timeStructure);
-    
+
     ///
     /// @brief      Set time zone
     /// @param      timeZone difference in seconds between local time zone and GMT
     /// @note       Use pre-defined tz_CET, tz_CEST, tz_PST, tz_PDT, ...
     ///
     void setTimeZone(int32_t timeZone = tz_GMT);
-    
+
     ///
     /// @brief      Set local date and time
     /// @param      timeEpoch time as epoch, number of seconds since Jan 1st, 1970
     /// @note       Set the time zone with setTimeZone()
     ///
     void setLocalTime(uint32_t timeEpoch);
-    
+
     ///
     /// @brief      Set local date and time
     /// @param      timeStructure time as structure
     /// @note       Set the time zone with setTimeZone()
     ///
     void setLocalTime(tm timeStructure);
-    
+
 //#if (INCLUDE_NTP_MODE > INCLUDE_NTP_NONE)
 //    ///
 //    /// @brief      Set RTC date and time from NTP server
@@ -156,12 +156,12 @@ public:
 //    ///
 //    uint8_t setTimeNTP(IPAddress serverNTP = IPAddress(145,238,203,14));
 //#endif // NTP
-    
+
 private:
     time_t  _epochRTC;
     tm      _structureRTC;
     int32_t _timeZoneDifference;
-    
+
 #if defined(__MSP432P401R__)
     RTC_C_Calendar _calendarMSP432;
 #endif
