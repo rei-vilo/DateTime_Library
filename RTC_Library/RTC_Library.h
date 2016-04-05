@@ -37,7 +37,7 @@
 #	include <driverlib/rtc_c.h>
 #elif defined(__CC3200R1M1RGC__)
 #   include <driverlib/prcm.h>
-#elif defined(__LM4F120H5QR__) || defined(__TM4C123GH6PM__) || defined(__TM4C129XNCZAD__)
+#elif defined(__LM4F120H5QR__) || defined(__TM4C123GH6PM__) || defined(__TM4C129XNCZAD__) || defined(__TM4C1294NCPDT__) 
 // nothing, as TivaWare is already in ROM!
 #else
 #	error Platform not supported.
