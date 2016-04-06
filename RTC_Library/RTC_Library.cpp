@@ -5,12 +5,12 @@
 // Developed with embedXcode+
 // http://embedXcode.weebly.com
 //
-// Project 		RTC_Library_v2
+// Project 		RTC_Library
 //
 // Created by 	Rei Vilo, 19/07/2015 16:31
 // 				http://embeddedcomputing.weebly.com
 //
-// Copyright 	(c) Rei Vilo, 2015
+// Copyright 	(c) Rei Vilo, 2015-2016
 // Licence		CC = BY NC SA
 //
 // See 			RTC_Library.h and ReadMe.txt for references
@@ -164,8 +164,8 @@ void DateTime::setTime(tm structureTime)
     _calendarMSP432.hours      = structureTime.tm_hour;
     _calendarMSP432.dayOfWeek  = structureTime.tm_wday;
     _calendarMSP432.dayOfmonth = structureTime.tm_mday;
-    _calendarMSP432.month      = structureTime.tm_mon + 1; // tm_mon is 0..11
-    _calendarMSP432.year       = structureTime.tm_year + 1900;
+    _calendarMSP432.month      = structureTime.tm_mon + 1; // 0=Jan based, tm_mon is 0..11
+    _calendarMSP432.year       = structureTime.tm_year + 1900; // 1900 based
     
     RTC_C_holdClock();
     // RTC_FORMAT_BINARY not available, so I guess RTC_FORMAT_BINARY = 0
@@ -198,8 +198,8 @@ uint32_t DateTime::getTime()
     _structureRTC.tm_hour = _calendarMSP432.hours;
     _structureRTC.tm_wday = _calendarMSP432.dayOfWeek;
     _structureRTC.tm_mday = _calendarMSP432.dayOfmonth;
-    _structureRTC.tm_mon  = _calendarMSP432.month - 1; // tm_mon is 0..11
-    _structureRTC.tm_year = _calendarMSP432.year - 1900;
+    _structureRTC.tm_mon  = _calendarMSP432.month - 1; // 0=Jan based, tm_mon is 0..11
+    _structureRTC.tm_year = _calendarMSP432.year - 1900; // 1900 based
     
     // Convert standard C structure into epoch
     //    return mktime(&_structureRTC);

@@ -10,10 +10,10 @@
 /// @author		Rei Vilo
 /// @author		http://embeddedcomputing.weebly.com
 ///
-/// @date		Dec 22, 2015
+/// @date		Apr 05, 2016
 /// @version	301
 ///
-/// @copyright	(c) Rei Vilo, 2015
+/// @copyright	(c) Rei Vilo, 2015-2016
 /// @copyright	CC = BY SA NC
 ///
 /// @see		ReadMe.txt for references
@@ -28,7 +28,7 @@
 ///
 /// @brief	Release
 ///
-#define RTC_Library_VERSION 301
+#define RTC_Library_VERSION 302
 
 
 #include "time.h"
