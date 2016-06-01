@@ -1,4 +1,4 @@
-## Date Time Libraries
+## Date Time Library
 
 * **RTC** for MSP432, CC3200 (non-EMT), TM4C123 and TM4C129
 * **WiFi NTP** for CC3200 (non-EMT) and CC3100

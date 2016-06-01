@@ -7,7 +7,7 @@
 //
 // Project 		RTC_Library
 //
-// Created by 	Rei Vilo, 19/07/2015 16:31
+// Created by 	Rei Vilo, Jul 19, 2015
 // 				http://embeddedcomputing.weebly.com
 //
 // Copyright 	(c) Rei Vilo, 2015-2016
@@ -32,7 +32,7 @@ void convertStructure2Epoch(tm timeStructure, time_t &timeEpoch)
     timeEpoch = mktime(&timeStructure);
 }
 
-String stringDateTime(tm timeStructure)
+String convertDateTime2String(tm timeStructure)
 {
     // asctime ends with \n, remove it!
     String result = (String)asctime(&timeStructure);
@@ -40,7 +40,7 @@ String stringDateTime(tm timeStructure)
     return result;
 }
 
-String stringDateTime(time_t timeEpoch)
+String convertDateTime2String(time_t timeEpoch)
 {
     // ctime ends with \n, remove it!
     String result = (String)ctime(&timeEpoch);
@@ -48,24 +48,24 @@ String stringDateTime(time_t timeEpoch)
     return result;
 }
 
-String stringFormatDateTime(const char * format, tm timeStructure)
+String formatDateTime2String(const char * format, tm timeStructure)
 {
     char buffer[128];
     strftime(buffer, 128, format, &timeStructure);
     return (String)buffer;
 }
 
-String stringFormatDateTime(const char * format, time_t timeEpoch)
+String formatDateTime2String(const char * format, time_t timeEpoch)
 {
     tm _timeStructure;
     convertEpoch2Structure(timeEpoch, _timeStructure);
-    return stringFormatDateTime(format, _timeStructure);
+    return formatDateTime2String(format, _timeStructure);
 }
 
 uint8_t convertString2DateTime(String stringDateTime, String stringFormat, time_t &timeEpoch)
 {
     tm _timeStructure;
-    
+
     if (convertString2DateTime(stringDateTime, stringFormat, _timeStructure))
     {
         convertStructure2Epoch(_timeStructure, timeEpoch);
@@ -84,7 +84,7 @@ uint8_t convertString2DateTime(String stringDateTime, String stringFormat, tm &t
     char charFormat[32];
     stringDateTime.toCharArray((char*)charDateTime, 32);
     stringFormat.toCharArray((char*)charFormat, 32);
-    
+
     if (strptime(charDateTime, charFormat, &_timeStructure) == NULL)
     {
         return CONVERT_OTHER_ERROR;                                             // error
@@ -157,7 +157,7 @@ void DateTime::setTime(tm structureTime)
     //                                  long tm_gmtoff;  // offset from CUT in seconds
     //                                  char *tm_zone;  // timezone abbreviation
     //  };                          };
-    
+
     // Convert standard C structure into MSP432 specific structure
     _calendarMSP432.seconds    = structureTime.tm_sec;
     _calendarMSP432.minutes    = structureTime.tm_min;
@@ -166,7 +166,7 @@ void DateTime::setTime(tm structureTime)
     _calendarMSP432.dayOfmonth = structureTime.tm_mday;
     _calendarMSP432.month      = structureTime.tm_mon + 1; // 0=Jan based, tm_mon is 0..11
     _calendarMSP432.year       = structureTime.tm_year + 1900; // 1900 based
-    
+
     RTC_C_holdClock();
     // RTC_FORMAT_BINARY not available, so I guess RTC_FORMAT_BINARY = 0
     RTC_C_initCalendar(&_calendarMSP432, 0);
@@ -176,22 +176,22 @@ void DateTime::setTime(tm structureTime)
 uint32_t DateTime::getTime()
 {
     _calendarMSP432 = RTC_C_getCalendarTime();
-    
+
     /*
-     Serial.print("year = ");
-     Serial.println(_calendarMSP432.year, DEC);
-     Serial.print("month = ");
-     Serial.println(_calendarMSP432.month, DEC);
-     Serial.print("dayOfmonth = ");
-     Serial.println(_calendarMSP432.dayOfmonth, DEC);
-     Serial.print("hours = ");
-     Serial.println(_calendarMSP432.hours, DEC);
-     Serial.print("minutes = ");
-     Serial.println(_calendarMSP432.minutes, DEC);
-     Serial.print("second = ");
-     Serial.println(_calendarMSP432.seconds, DEC);
-     */
-    
+        Serial.print("year = ");
+        Serial.println(_calendarMSP432.year, DEC);
+        Serial.print("month = ");
+        Serial.println(_calendarMSP432.month, DEC);
+        Serial.print("dayOfmonth = ");
+        Serial.println(_calendarMSP432.dayOfmonth, DEC);
+        Serial.print("hours = ");
+        Serial.println(_calendarMSP432.hours, DEC);
+        Serial.print("minutes = ");
+        Serial.println(_calendarMSP432.minutes, DEC);
+        Serial.print("second = ");
+        Serial.println(_calendarMSP432.seconds, DEC);
+    */
+
     // Convert specific structure into standard C structure MSP432
     _structureRTC.tm_sec  = _calendarMSP432.seconds;
     _structureRTC.tm_min  = _calendarMSP432.minutes;
@@ -200,14 +200,14 @@ uint32_t DateTime::getTime()
     _structureRTC.tm_mday = _calendarMSP432.dayOfmonth;
     _structureRTC.tm_mon  = _calendarMSP432.month - 1; // 0=Jan based, tm_mon is 0..11
     _structureRTC.tm_year = _calendarMSP432.year - 1900; // 1900 based
-    
+
     // Convert standard C structure into epoch
     //    return mktime(&_structureRTC);
     convertStructure2Epoch(_structureRTC, _epochRTC);
     return _epochRTC;
 }
 
-#elif defined(__CC3200R1M1RGC__)
+#elif defined(__CC3200R1M1RGC__) || defined(__CC3200R1MXRGCR__)
 
 void DateTime::begin()
 {
@@ -234,7 +234,7 @@ uint32_t DateTime::getTime()
     return _seconds;
 }
 
-#elif defined(__LM4F120H5QR__) || defined(__TM4C123GH6PM__) || defined(__TM4C129XNCZAD__) || defined(__TM4C1294NCPDT__)
+#elif defined(__LM4F120H5QR__) || defined(__TM4C123GH6PM__) || defined(__TM4C129XNCZAD__) || defined(__TM4C1294NCPDT__)
 
 void DateTime::begin()
 {

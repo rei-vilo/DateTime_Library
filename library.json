@@ -1,0 +1,20 @@
+{
+    "name": "Date Time Library",
+    "description": "Date Time Library for Energia",
+    "keywords": "Energia",
+    "authors":
+    {
+        "name":  "Rei Vilo",
+        "url":   "https://github.com/rei-vilo",
+        "maintainer": true
+    },
+    "repository":
+    {
+        "type": "git",
+        "url": "https://github.com/rei-vilo/DateTime_Library.git"
+    },
+    "url": "http://embeddedcomputing.weebly.com/date-and-time-library.html",
+    "frameworks": "energia",
+    "platforms": ["cc3200","msp432","tivac"]
+    "examples": "Examples/*/*.ino"
+}

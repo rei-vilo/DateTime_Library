@@ -2,16 +2,16 @@
 /// @file		Credentials.h
 /// @brief		Header
 /// @details	Credentials for WiFi LAN
-/// @n	
+/// @n
 /// @n @b		Project CC3200_NTP
 /// @n @a		Developed with [embedXcode+](http://embedXcode.weebly.com)
-/// 
+///
 /// @author		Rei Vilo
 /// @author		http://embeddedcomputing.weebly.com
 ///
 /// @date		19/07/2015 11:35
 /// @version	101
-/// 
+///
 /// @copyright	(c) Rei Vilo, 2015
 /// @copyright	CC = BY SA NC
 ///
