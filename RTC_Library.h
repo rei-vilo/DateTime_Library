@@ -73,8 +73,7 @@
 /// @note           For NTP features, see NTP_Ethernet and NTP_WiFi
 /// @bug            Compilation fails on CC3200-EMT
 ///
-class DateTime
-{
+class DateTime {
     public:
         ///
         /// @brief      Constructor
