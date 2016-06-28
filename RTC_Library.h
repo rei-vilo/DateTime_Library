@@ -10,8 +10,8 @@
 /// @author		Rei Vilo
 /// @author		http://embeddedcomputing.weebly.com
 ///
-/// @date		Apr 05, 2016
-/// @version	302
+/// @date		Jun 28, 2016
+/// @version	403
 ///
 /// @copyright	(c) Rei Vilo, 2015-2016
 /// @copyright	CC = BY SA NC
@@ -28,19 +28,20 @@
 ///
 /// @brief	Release
 ///
-#define RTC_Library_VERSION 302
+#define RTC_Library_VERSION 403
 
 
 #include "time.h"
 
 #if defined(__MSP432P401R__)
-    #include <driverlib/rtc_c.h>
+//#include <driverlib/rtc_c.h>
+#include <rtc_c.h>
 #elif defined(__CC3200R1M1RGC__) || defined(__CC3200R1MXRGCR__)
-    #include <driverlib/prcm.h>
+#include <driverlib/prcm.h>
 #elif defined(__LM4F120H5QR__) || defined(__TM4C123GH6PM__) || defined(__TM4C129XNCZAD__) || defined(__TM4C1294NCPDT__)
-    // nothing, as TivaWare is already in ROM!
+// nothing, as TivaWare is already in ROM!
 #else
-    #	error Platform not supported.
+#error Platform not supported.
 #endif
 
 
@@ -73,96 +74,97 @@
 /// @note           For NTP features, see NTP_Ethernet and NTP_WiFi
 /// @bug            Compilation fails on CC3200-EMT
 ///
-class DateTime {
-    public:
-        ///
-        /// @brief      Constructor
-        ///
-        DateTime();
+class DateTime
+{
+public:
+    ///
+    /// @brief      Constructor
+    ///
+    DateTime();
 
-        ///
-        /// @brief      Initialisation
-        ///
-        void begin();
-
-        ///
-        /// @brief      Get GMT date and time
-        /// @return     epoch = number of seconds since Jan 1st, 1970, uint32_t or time_t
-        ///
-        uint32_t getTime();
-
-        ///
-        /// @brief      Get local date and time
-        /// @return     epoch = number of seconds since Jan 1st, 1970, uint32_t or time_t
-        /// @note       Set the time zone with setTimeZone()
-        ///
-        uint32_t getLocalTime();
-
-        ///
-        /// @brief      Set GMT date and time
-        /// @param      timeEpoch time as epoch, number of seconds since Jan 1st, 1970
-        ///
-        void setTime(uint32_t timeEpoch);
-
-        ///
-        /// @brief      Set GMT date and time
-        /// @param		timeStructure time as structure
-        ///
-        void setTime(tm timeStructure);
-
-        ///
-        /// @brief      Set time zone
-        /// @param      timeZone difference in seconds between local time zone and GMT
-        /// @note       Use pre-defined tz_CET, tz_CEST, tz_PST, tz_PDT, ...
-        ///
-        void setTimeZone(int32_t timeZone = tz_GMT);
-
-        ///
-        /// @brief      Set local date and time
-        /// @param      timeEpoch time as epoch, number of seconds since Jan 1st, 1970
-        /// @note       Set the time zone with setTimeZone()
-        ///
-        void setLocalTime(uint32_t timeEpoch);
-
-        ///
-        /// @brief      Set local date and time
-        /// @param      timeStructure time as structure
-        /// @note       Set the time zone with setTimeZone()
-        ///
-        void setLocalTime(tm timeStructure);
-
-        //#if (INCLUDE_NTP_MODE > INCLUDE_NTP_NONE)
-        //    ///
-        //    /// @brief      Set RTC date and time from NTP server
-        //    //  /// @param      epochNTP time in epoch format
-        //    /// @param      serverNTP IP address of the NTP server, default =
-        //    /// @return     0 is successful, error code otherwise
-        //    /// @note       epochNTP is updated only if successful.
-        //    /// @warning    A valid connection to Internet is required.
-        //    /// @note       Examples of NTP servers
-        //    /// * time.nist.gov   IPAddress(206,246,122,250)
-        //    /// * wwv.nist.gov    IPAddress(24,56,178,140)
-        //    /// * ntp-p1.obspm.fr IPAddress(145,238,203,14)
-        //    ///
-        //    /// @n      Based on UDP NTP Client, provided with Energia 16
-        //    /// * Created 4 Sep 2010 by Michael Margolis
-        //    /// * Modified 9 Apr 2012 by Tom Igoe
-        //    /// * Modified 1 July 2014 by Noah Luskey
-        //    /// * Updated July 19, 2015 by Rei Vilo with RTC for CC3200, MSP432, TM4C123 and TM4C129
-        //    ///
-        //    /// @see 	NTP time servers and messages
-        //    /// @n		http://en.wikipedia.org/wiki/Network_Time_Protocol
-        //    ///
-        //    uint8_t setTimeNTP(IPAddress serverNTP = IPAddress(145,238,203,14));
-        //#endif // NTP
-
-    private:
-        time_t  _epochRTC;
-        tm      _structureRTC;
-        int32_t _timeZoneDifference;
-
+    ///
+    /// @brief      Initialisation
+    ///
+    void begin();
+    
+    ///
+    /// @brief      Get GMT date and time
+    /// @return     epoch = number of seconds since Jan 1st, 1970, uint32_t or time_t
+    ///
+    uint32_t getTime();
+    
+    ///
+    /// @brief      Get local date and time
+    /// @return     epoch = number of seconds since Jan 1st, 1970, uint32_t or time_t
+    /// @note       Set the time zone with setTimeZone()
+    ///
+    uint32_t getLocalTime();
+    
+    ///
+    /// @brief      Set GMT date and time
+    /// @param      timeEpoch time as epoch, number of seconds since Jan 1st, 1970
+    ///
+    void setTime(uint32_t timeEpoch);
+    
+    ///
+    /// @brief      Set GMT date and time
+    /// @param		timeStructure time as structure
+    ///
+    void setTime(tm timeStructure);
+    
+    ///
+    /// @brief      Set time zone
+    /// @param      timeZone difference in seconds between local time zone and GMT
+    /// @note       Use pre-defined tz_CET, tz_CEST, tz_PST, tz_PDT, ...
+    ///
+    void setTimeZone(int32_t timeZone = tz_GMT);
+    
+    ///
+    /// @brief      Set local date and time
+    /// @param      timeEpoch time as epoch, number of seconds since Jan 1st, 1970
+    /// @note       Set the time zone with setTimeZone()
+    ///
+    void setLocalTime(uint32_t timeEpoch);
+    
+    ///
+    /// @brief      Set local date and time
+    /// @param      timeStructure time as structure
+    /// @note       Set the time zone with setTimeZone()
+    ///
+    void setLocalTime(tm timeStructure);
+    
+    //#if (INCLUDE_NTP_MODE > INCLUDE_NTP_NONE)
+    //    ///
+    //    /// @brief      Set RTC date and time from NTP server
+    //    //  /// @param      epochNTP time in epoch format
+    //    /// @param      serverNTP IP address of the NTP server, default =
+    //    /// @return     0 is successful, error code otherwise
+    //    /// @note       epochNTP is updated only if successful.
+    //    /// @warning    A valid connection to Internet is required.
+    //    /// @note       Examples of NTP servers
+    //    /// * time.nist.gov   IPAddress(206,246,122,250)
+    //    /// * wwv.nist.gov    IPAddress(24,56,178,140)
+    //    /// * ntp-p1.obspm.fr IPAddress(145,238,203,14)
+    //    ///
+    //    /// @n      Based on UDP NTP Client, provided with Energia 16
+    //    /// * Created 4 Sep 2010 by Michael Margolis
+    //    /// * Modified 9 Apr 2012 by Tom Igoe
+    //    /// * Modified 1 July 2014 by Noah Luskey
+    //    /// * Updated July 19, 2015 by Rei Vilo with RTC for CC3200, MSP432, TM4C123 and TM4C129
+    //    ///
+    //    /// @see 	NTP time servers and messages
+    //    /// @n		http://en.wikipedia.org/wiki/Network_Time_Protocol
+    //    ///
+    //    uint8_t setTimeNTP(IPAddress serverNTP = IPAddress(145,238,203,14));
+    //#endif // NTP
+    
+private:
+    time_t  _epochRTC;
+    tm      _structureRTC;
+    int32_t _timeZoneDifference;
+    
 #if defined(__MSP432P401R__)
-        RTC_C_Calendar _calendarMSP432;
+    RTC_C_Calendar _calendarMSP432;
 #endif
 };
 
@@ -320,25 +322,25 @@ String formatDateTime2String(const char * format, time_t timeEpoch);
 /// @param      timeStructure time as structure
 /// @return     String
 /// @note       Sun Jul 19 18:55:13 2015
-/// @deprecated stringDateTime
+/// @deprecated stringDateTime, use convertDateTime2String()
 ///
-String stringDateTime(tm timeStructure);
+//String stringDateTime(tm timeStructure);
 
 ///
 /// @brief      Standard format for date and time string
 /// @param      timeEpoch time as epoch
 /// @return     String
 /// @note       Sun Jul 19 18:55:13 2015
-/// @deprecated stringDateTime
+/// @deprecated stringDateTime, use convertDateTime2String()
 ///
-String stringDateTime(time_t timeEpoch);
+//String stringDateTime(time_t timeEpoch);
 
 ///
 /// @brief      Custom format for date and time
 /// @param      format see below
 /// @param      timeStructure time as structure
 /// @return     String
-/// @deprecated stringFormatDateTime
+/// @deprecated stringFormatDateTime, use formatDateTime2String()
 ///
 //String stringFormatDateTime(const char * format, tm timeStructure);
 
@@ -347,7 +349,7 @@ String stringDateTime(time_t timeEpoch);
 /// @param      format see below
 /// @param      timeEpoch time as epoch
 /// @return     String
-/// @deprecated stringFormatDateTime
+/// @deprecated stringFormatDateTime, use formatDateTime2String()
 ///
 //String stringFormatDateTime(const char * format, time_t timeEpoch);
 

@@ -5,13 +5,13 @@
 // Developed with embedXcode+
 // http://embedXcode.weebly.com
 //
-// Project 		DateTimeLibrary_v2
+// Project 		DateTime_Library
 //
-// Created by 	ReiVilo, 25/09/2015 20:49
-// 				ReiVilo
+// Created by 	ReiVilo, Sep 25, 2015
+// 				http://embeddedcomputing.weebly.com
 //
-// Copyright 	(c) ReiVilo, 2015
-// Licence		<#license#>
+// Copyright 	(c) Rei Vilo, 2015-2016
+// Licence		CC = BY NC SA
 //
 // See 			WiFiNTP.h and ReadMe.txt for references
 //

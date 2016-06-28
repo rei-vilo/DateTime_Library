@@ -1,5 +1,5 @@
 ///
-/// @mainpage	CC3200_NTP_RTC
+/// @mainpage	Date Time Library
 ///
 /// @details	RTC and NTP Date and Time Library for MSP432, CC3200 and TM4C
 /// @n
@@ -9,9 +9,9 @@
 /// @author		Rei Vilo
 /// @author		http://embeddedcomputing.weebly.com
 /// @date		18/07/2015 16:22
-/// @version	301
+/// @version	403
 ///
-/// @copyright	(c) Rei Vilo, 2015
+/// @copyright	(c) Rei Vilo, 2015-2016
 /// @copyright	CC = BY SA NC
 ///
 /// @see		ReadMe.txt for references
@@ -19,7 +19,7 @@
 
 
 ///
-/// @file		CC3200_NTP_RTC.ino
+/// @file		CC3200_NTP.ino
 /// @brief		Example for NTP with CC3200 and MSP432
 ///
 /// @details Based on UDP NTP Client, part of Energia 16 distribution
@@ -33,9 +33,9 @@
 /// @author		Rei Vilo
 /// @author		http://embeddedcomputing.weebly.com
 /// @date		18/07/2015 16:22
-/// @version	301
+/// @version	403
 ///
-/// @copyright	(c) Rei Vilo, 2015
+/// @copyright	(c) Rei Vilo, 2015-2016
 /// @copyright	CC = BY SA NC
 ///
 /// @see		ReadMe.txt for references
@@ -45,42 +45,42 @@
 
 // Core library for code-sense - IDE-based
 #if defined(WIRING) // Wiring specific
-    #include "Wiring.h"
+#include "Wiring.h"
 #elif defined(MAPLE_IDE) // Maple specific
-    #include "WProgram.h"
+#include "WProgram.h"
 #elif defined(ROBOTIS) // Robotis specific
-    #include "libpandora_types.h"
-    #include "pandora.h"
+#include "libpandora_types.h"
+#include "pandora.h"
 #elif defined(MPIDE) // chipKIT specific
-    #include "WProgram.h"
+#include "WProgram.h"
 #elif defined(DIGISPARK) // Digispark specific
-    #include "Arduino.h"
+#include "Arduino.h"
 #elif defined(ENERGIA) // LaunchPad specific
-    #include "Energia.h"
+#include "Energia.h"
 #elif defined(LITTLEROBOTFRIENDS) // LittleRobotFriends specific
-    #include "LRF.h"
+#include "LRF.h"
 #elif defined(MICRODUINO) // Microduino specific
-    #include "Arduino.h"
+#include "Arduino.h"
 #elif defined(TEENSYDUINO) // Teensy specific
-    #include "Arduino.h"
+#include "Arduino.h"
 #elif defined(REDBEARLAB) // RedBearLab specific
-    #include "Arduino.h"
+#include "Arduino.h"
 #elif defined(RFDUINO) // RFduino specific
-    #include "Arduino.h"
+#include "Arduino.h"
 #elif defined(SPARK) || defined(PARTICLE) // Particle / Spark specific
-    #include "application.h"
+#include "application.h"
 #elif defined(ESP8266) // ESP8266 specific
-    #include "Arduino.h"
+#include "Arduino.h"
 #elif defined(ARDUINO) // Arduino 1.0 and 1.5 specific
-    #include "Arduino.h"
+#include "Arduino.h"
 #else // error
-    #   error Platform not defined
+#   error Platform not defined
 #endif // end IDE
 
 // Include application, user and local libraries
 #ifndef __CC3200R1M1RGC__
-    // Do not include SPI for CC3200 LaunchPad
-    #include <SPI.h>
+// Do not include SPI for CC3200 LaunchPad
+#include <SPI.h>
 #endif
 #include <WiFi.h>
 
@@ -184,13 +184,13 @@ void loop()
 
         // Print date and time nicely
         Serial.print("NTP = \t");
-        Serial.print(stringDateTime(myTimeNTP));
+        Serial.print(convertDateTime2String(myTimeNTP));
 
         Serial.print("\rRTC = \t");
-        Serial.print(stringDateTime(myEpochRTC));
+        Serial.print(convertDateTime2String(myEpochRTC));
         Serial.print("\r");
 
-        Serial.println(stringFormatDateTime("CEST time is %I:%M %p.", myRTC.getLocalTime()));
+        Serial.println(formatDateTime2String("CEST time is %I:%M %p.", myRTC.getLocalTime()));
     }
 
     for (int8_t i = 10; i > 0; i--)

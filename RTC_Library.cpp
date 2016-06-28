@@ -5,7 +5,7 @@
 // Developed with embedXcode+
 // http://embedXcode.weebly.com
 //
-// Project 		RTC_Library
+// Project 		DateTime_Library
 //
 // Created by 	Rei Vilo, Jul 19, 2015
 // 				http://embeddedcomputing.weebly.com
