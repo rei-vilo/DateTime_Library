@@ -1,5 +1,6 @@
 language: generic
 compiler: clang
+install: make get-deps
 env:
   global:
     - IDE_VERSION=1.6.10E18
