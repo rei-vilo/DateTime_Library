@@ -1,4 +1,5 @@
 language: generic
+compiler: clang
 env:
   global:
     - IDE_VERSION=1.6.10E18
