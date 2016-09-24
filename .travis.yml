@@ -16,11 +16,11 @@ before_install:
   - export PATH=$PATH:$HOME/energia-ide
 
   - if [[ "$BOARD" =~ "energia:tivac:" ]]; then
-      energia --install-boards energia:tivac:
+    energia --install-boards energia:tivac;
     fi
 
   - if [[ "$BOARD" =~ "energia:cc3200:" ]]; then
-      energia --install-boards energia:cc3200:
+      energia --install-boards energia:cc3200;
       energia --install-library WiFi;
     fi
 
