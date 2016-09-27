@@ -23,7 +23,6 @@ before_install:
 
   - if [[ "$BOARD" =~ "energia:cc3200:" ]]; then
       energia --install-boards energia:cc3200;
-      energia --install-library WiFi;
     fi
 
   - findAndReplace() { sed -i'' -e"s|$1|$2|g" "$3"; }
