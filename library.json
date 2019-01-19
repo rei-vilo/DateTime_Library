@@ -15,6 +15,6 @@
     },
     "url": "http://embeddedcomputing.weebly.com/date-and-time-library.html",
     "frameworks": "energia",
-    "platforms": ["cc3200","msp432","tivac"]
+    "platforms": ["cc3200","msp432","tivac"],
     "examples": "Examples/*/*.ino"
 }
