@@ -3,14 +3,14 @@
 // Library C++ code
 // ----------------------------------
 // Developed with embedXcode+
-// http://embedXcode.weebly.com
+// https://embedXcode.weebly.com
 //
 // Project 		DateTime_Library
 //
-// Created by 	Rei Vilo, Jul 19, 2015
-// 				http://embeddedcomputing.weebly.com
+// Created by 	Rei Vilo, 19 Jul 2015
+// 				https://embeddedcomputing.weebly.com
 //
-// Copyright 	(c) Rei Vilo, 2015-2016
+// Copyright 	(c) Rei Vilo, 2015-2019
 // Licence		CC = BY NC SA
 //
 // See 			RTC_Library.h and ReadMe.txt for references
@@ -51,8 +51,16 @@ String convertDateTime2String(time_t timeEpoch)
 String formatDateTime2String(const char * format, tm timeStructure)
 {
     char buffer[128];
+    memset(buffer, 0x00, strlen(buffer));
     strftime(buffer, 128, format, &timeStructure);
+    strcat(buffer, 0x00);
+
+//#if defined(ENERGIA_ARCH_CC13X2)
+//    String result = buffer;
+//    return result.substring(0, result.length() - 2);
+//#else
     return (String)buffer;
+//#endif
 }
 
 String formatDateTime2String(const char * format, time_t timeEpoch)
@@ -207,6 +215,64 @@ uint32_t DateTime::getTime()
     return _epochRTC;
 }
 
+//#elif defined(ENERGIA_ARCH_CC13X2)
+//void DateTime::begin()
+//{
+//    AONRTCEnable();
+//}
+//
+//void DateTime::setTime(uint32_t timeEpoch)
+//{
+//    /*
+//     Serial.print("DateTime::setLocalTime: ");
+//     Serial.println(timeEpoch, DEC);
+//     */
+//    // Convert epoch into standard C structure
+//    AONRTCCompareValueSet(AON_RTC_CH0, timeEpoch);
+//}
+//
+//void DateTime::setTime(tm structureTime)
+//{
+//    convertStructure2Epoch(structureTime, _epochRTC);
+//    AONRTCCompareValueSet(AON_RTC_CH0, _epochRTC);
+//}
+//
+//uint32_t DateTime::getTime()
+//{
+//    _epochRTC = AONRTCCompareValueGet(AON_RTC_CH0);
+//    return _epochRTC;
+//}
+//// ENERGIA_ARCH_CC13X2
+
+#elif defined(ENERGIA_ARCH_CC13XX) || defined(ENERGIA_ARCH_CC13X2)
+void DateTime::begin()
+{
+    ;
+}
+
+void DateTime::setTime(uint32_t timeEpoch)
+{
+    /*
+        Serial.print("DateTime::setLocalTime: ");
+        Serial.println(timeEpoch, DEC);
+    */
+    // Convert epoch into standard C structure
+    Seconds_set(timeEpoch);
+}
+
+void DateTime::setTime(tm structureTime)
+{
+    convertStructure2Epoch(structureTime, _epochRTC);
+    Seconds_set(_epochRTC);
+}
+
+uint32_t DateTime::getTime()
+{
+    _epochRTC = Seconds_get();
+    return _epochRTC;
+}
+
+
 #elif defined(__CC3200R1M1RGC__) || defined(__CC3200R1MXRGCR__)
 
 void DateTime::begin()
@@ -259,5 +325,5 @@ uint32_t DateTime::getTime()
 }
 
 #else
-#	error Platform not supported.
+#error Platform not supported.
 #endif

@@ -1,19 +1,32 @@
+/// @mainpage   Date Time Library
+///
+/// @details    RTC for CC3200, MSP432, TM4C123 and TM4C129
+///
+/// @n          Release History
+///
+/// * 19 Jul 2015 Added RTC for CC3200, MSP432, TM4C123 and TM4C129
+/// * 22 Dec 2015 Separated libraries for RTC, WiFi and Ethernet
+/// * 28 Jun 2016 Updated for Energia 18
+/// * 05 Mar 2018 Improved buffer management
+/// * 21 Nov 2019 Added support for cc1350 and CC1352
+///
+
 ///
 /// @file		RTC_Library.h
 /// @brief		Library header
-/// @details	RTC Date and Time Library for LM4F / TM4C, MSP432 and CC3200
+/// @details	RTC Date and Time Library for LM4F/TM4C, MSP432 and CC3200, CC1350, CC1352
 /// @note       Use NTP_Ethernet or NTP_WiFi for getting NTP time
 /// @n
 /// @n @b		Project RTC_Library
-/// @n @a		Developed with [embedXcode+](http://embedXcode.weebly.com)
+/// @n @a		Developed with [embedXcode+](https://embedXcode.weebly.com)
 ///
 /// @author		Rei Vilo
-/// @author		http://embeddedcomputing.weebly.com
+/// @author		https://embeddedcomputing.weebly.com
 ///
-/// @date		Jun 28, 2016
-/// @version	403
+/// @date		21 Nov 2019
+/// @version	405
 ///
-/// @copyright	(c) Rei Vilo, 2015-2016
+/// @copyright	(c) Rei Vilo, 2015-2019
 /// @copyright	CC = BY SA NC
 ///
 /// @see		ReadMe.txt for references
@@ -32,14 +45,24 @@
 
 
 #include "time.h"
+//#include <ti/posix/gcc/time.h>
 
 #if defined(__MSP432P401R__)
 //#include <driverlib/rtc_c.h>
 #include <rtc_c.h>
+
+#elif defined(ENERGIA_ARCH_CC13XX) || defined(ENERGIA_ARCH_CC13X2)
+#include <ti/sysbios/hal/Seconds.h>
+
+//#elif defined(ENERGIA_ARCH_CC13X2)
+//#include <aon_rtc.h>
+
 #elif defined(__CC3200R1M1RGC__) || defined(__CC3200R1MXRGCR__)
 #include <driverlib/prcm.h>
+
 #elif defined(__LM4F120H5QR__) || defined(__TM4C123GH6PM__) || defined(__TM4C129XNCZAD__) || defined(__TM4C1294NCPDT__)
 // nothing, as TivaWare is already in ROM!
+
 #else
 #error Platform not supported.
 #endif
@@ -69,14 +92,17 @@
 
 
 ///
-/// @brief          Class for RTC
-/// @note           Tested on MSP432-EMT, CC3200, LM4F120, TM4C123, TM4C129
-/// @note           For NTP features, see NTP_Ethernet and NTP_WiFi
-/// @bug            Compilation fails on CC3200-EMT
+/// @brief  Class for RTC
+/// @note   Tested on MSP432, CC1352, CC3200 non-EMT, LM4F120, TM4C123, TM4C129
+/// @note   For NTP features, see NTP_Ethernet and NTP_WiFi
+/// @bug    List of known bugs
+/// + CC3200-EMT: Compilation fails
+/// + CC1352: Outputs are wrong
+/// + CC1352: Conversions from/to epoch/tm are wrong
 ///
 class DateTime
 {
-public:
+  public:
     ///
     /// @brief      Constructor
     ///
@@ -86,53 +112,53 @@ public:
     /// @brief      Initialisation
     ///
     void begin();
-    
+
     ///
     /// @brief      Get GMT date and time
     /// @return     epoch = number of seconds since Jan 1st, 1970, uint32_t or time_t
     ///
     uint32_t getTime();
-    
+
     ///
     /// @brief      Get local date and time
     /// @return     epoch = number of seconds since Jan 1st, 1970, uint32_t or time_t
     /// @note       Set the time zone with setTimeZone()
     ///
     uint32_t getLocalTime();
-    
+
     ///
     /// @brief      Set GMT date and time
     /// @param      timeEpoch time as epoch, number of seconds since Jan 1st, 1970
     ///
     void setTime(uint32_t timeEpoch);
-    
+
     ///
     /// @brief      Set GMT date and time
     /// @param		timeStructure time as structure
     ///
     void setTime(tm timeStructure);
-    
+
     ///
     /// @brief      Set time zone
     /// @param      timeZone difference in seconds between local time zone and GMT
     /// @note       Use pre-defined tz_CET, tz_CEST, tz_PST, tz_PDT, ...
     ///
     void setTimeZone(int32_t timeZone = tz_GMT);
-    
+
     ///
     /// @brief      Set local date and time
     /// @param      timeEpoch time as epoch, number of seconds since Jan 1st, 1970
     /// @note       Set the time zone with setTimeZone()
     ///
     void setLocalTime(uint32_t timeEpoch);
-    
+
     ///
     /// @brief      Set local date and time
     /// @param      timeStructure time as structure
     /// @note       Set the time zone with setTimeZone()
     ///
     void setLocalTime(tm timeStructure);
-    
+
     //#if (INCLUDE_NTP_MODE > INCLUDE_NTP_NONE)
     //    ///
     //    /// @brief      Set RTC date and time from NTP server
@@ -157,12 +183,13 @@ public:
     //    ///
     //    uint8_t setTimeNTP(IPAddress serverNTP = IPAddress(145,238,203,14));
     //#endif // NTP
-    
-private:
+
+  private:
     time_t  _epochRTC;
+    //    uint32_t _epochRTC;
     tm      _structureRTC;
     int32_t _timeZoneDifference;
-    
+
 #if defined(__MSP432P401R__)
     RTC_C_Calendar _calendarMSP432;
 #endif
@@ -198,16 +225,16 @@ private:
 
 ///
 /// @brief      Convert epoch into structure
-/// @param      timeEpoch time as epoch, input
-/// @param      timeStructure time as structure, output
+/// @param[in]  timeEpoch time as epoch, input
+/// @param[out] timeStructure time as structure, output
 ///
 void convertEpoch2Structure(time_t timeEpoch, tm &timeStructure);
 
 
 ///
 /// @brief      Convert structure into epoch
-/// @param      timeStructure time as time structure, input
-/// @param      timeEpoch time as epoch, output
+/// @param[in]  timeStructure time as time structure, input
+/// @param[out] timeEpoch time as epoch, output
 ///
 void convertStructure2Epoch(tm timeStructure, time_t &timeEpoch);
 
@@ -352,6 +379,5 @@ String formatDateTime2String(const char * format, time_t timeEpoch);
 /// @deprecated stringFormatDateTime, use formatDateTime2String()
 ///
 //String stringFormatDateTime(const char * format, time_t timeEpoch);
-
 
 #endif // header
